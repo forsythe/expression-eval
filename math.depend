@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1482093098 source:c:\users\forsythe\dropbox\other\coding\cpp\math\main.cpp
+	<iostream>
+	<vector>
+	<stack>
+	<queue>
+	<string>
+	<sstream>
+	<cmath>
+	<cassert>
+
