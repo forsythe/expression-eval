@@ -10,11 +10,17 @@
 #include <cassert>
 
 
-#define NUM_CONSTANTS 2
+#define NUM_CONSTANTS 6
+#define debug 0
+
 using namespace std;
 
 string constants[NUM_CONSTANTS][2] = {{"pi", "3.14159265"},
-    {"e", "2.71828182"}
+    {"e", "2.71828182"},
+    {"sin", "s"},
+    {"cos", "c"},
+    {"tan", "t"},
+    {"ln", "l"},
 };
 
 void ReplaceStringInPlace(std::string& subject, const std::string& search, const std::string& replace) {
@@ -42,11 +48,15 @@ bool isNumeric(const char c) {
 }
 
 bool isOperator(const string s) {
-    return (s == "+" || s == "-" || s == "*" || s == "/" || s == "^" || s == "u" || s == "~");
+    return (s == "+" || s == "-" || s == "*" || s == "/" || s == "^" || s == "u" || s == "~" || s == "s" || s == "c" || s == "t" || s == "l");
 }
 
 bool isOperator(const char c) {
-    return (c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == 'u' || c == '~');
+    return (c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == 'u' || c == '~' || c == 's' || c == 'c' || c == 't' || c == 'l');
+}
+
+bool isBinaryOperator(const string s){
+    return (s == "+" || s == "-" || s == "*" || s == "/" || s == "^" || s == "~");
 }
 
 int getPrecedence(const string s) {
@@ -60,8 +70,10 @@ int getPrecedence(const string s) {
     case 'u':
         return 3;
     case '^': //unary (negative num)
-    case '~': //multiplicative inverse
+    case '~': //to the negative power
         return 4;
+    case 's': case 'c': case 't': case 'l': //trig functions, log
+        return 5;
     default:
         return 0;
     }
@@ -167,11 +179,11 @@ int main() {
             continue;
         }
 
-        /*
+        if (debug)
         for (int k = output.size(); k > 0; k--) {
             cout << output.front() << " ";
             output.pop();
-        }*/
+        }
 
         ///evaluate postfix notation
         stack<string> nums;
@@ -184,11 +196,25 @@ int main() {
             if (!isOperator(temp)) { //a number
                 nums.push(temp);
             } else {
-                if (temp == "u") { //unary operator
+                if (!isBinaryOperator(temp)) { //unary operator
                     a = nums.top();
                     nums.pop();
-                    a = "-"+a;
-                    nums.push(a);
+                    if (temp == "u"){
+                        a = "-"+a;
+                        nums.push(a);
+                    } else if (temp == "s"){
+                        a = to_string(sin(stod(a)));
+                        nums.push(a);
+                    } else if (temp == "c"){
+                        a = to_string(cos(stod(a)));
+                        nums.push(a);
+                    } else if (temp == "t"){
+                        a = to_string(tan(stod(a)));
+                        nums.push(a);
+                    } else if (temp == "l"){
+                        a = to_string(log(stod(a)));
+                        nums.push(a);
+                    }
                 } else { //binary operator
                     b = nums.top();
                     nums.pop();
@@ -216,7 +242,7 @@ int main() {
             }
 
         }
-        //if (nums.size() > 0)
+        if (nums.size() > 0)
         cout << "= " << nums.top() << endl;
     }
     return 0;
