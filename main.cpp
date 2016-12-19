@@ -9,13 +9,21 @@
 
 #include <cassert>
 
+
+#define NUM_CONSTANTS 2
 using namespace std;
 
-struct Token {
-    double val;
-    bool isNum;
+string constants[NUM_CONSTANTS][2] = {{"pi", "3.14159265"},
+    {"e", "2.71828182"}
 };
 
+void ReplaceStringInPlace(std::string& subject, const std::string& search, const std::string& replace) {
+    size_t pos = 0;
+    while ((pos = subject.find(search, pos)) != std::string::npos) {
+        subject.replace(pos, search.length(), replace);
+        pos += replace.length();
+    }
+}
 double stod(const string s) {
     istringstream os(s);
     double d;
@@ -34,11 +42,11 @@ bool isNumeric(const char c) {
 }
 
 bool isOperator(const string s) {
-    return (s == "+" || s == "-" || s == "*" || s == "/" || s == "^" || s == "u");
+    return (s == "+" || s == "-" || s == "*" || s == "/" || s == "^" || s == "u" || s == "~");
 }
 
 bool isOperator(const char c) {
-    return (c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == 'u');
+    return (c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == 'u' || c == '~');
 }
 
 int getPrecedence(const string s) {
@@ -49,9 +57,11 @@ int getPrecedence(const string s) {
     case '*':
     case '/':
         return 2;
-    case '^':
-    case 'u': ///unary (negative num)
+    case 'u':
         return 3;
+    case '^': //unary (negative num)
+    case '~': //multiplicative inverse
+        return 4;
     default:
         return 0;
     }
@@ -71,7 +81,9 @@ int main() {
             continue;
         //cout << "raw input: " << raw_input << endl;
 
-        ///process any unary operators
+        ///process any unary operators and inverse
+        ReplaceStringInPlace(raw_input, "^-", "~");
+
         if (raw_input[0] == '-')
             raw_input[0] = 'u';
 
@@ -84,6 +96,11 @@ int main() {
             }
         }
         //cout << "unary accounted input: " << raw_input << endl;
+        ///process natural constants
+        for (int k = 0; k < NUM_CONSTANTS; k++){
+            ReplaceStringInPlace(raw_input, constants[k][0], constants[k][1]);
+        }
+        //cout << raw_input << endl;
 
         ///parse into tokens
         queue<string> tokens;
@@ -115,6 +132,7 @@ int main() {
             temp = tokens.front();
             tokens.pop();
             if (isOperator(temp)) {
+                    //todo: fix -1^2, 1^-2
                 while(!ops.empty() && getPrecedence(ops.top()) >= getPrecedence(temp)) {
                     output.push(ops.top());
                     ops.pop();
@@ -149,8 +167,8 @@ int main() {
             continue;
         }
 
-
-        /*for (int k = output.size(); k > 0; k--) {
+        /*
+        for (int k = output.size(); k > 0; k--) {
             cout << output.front() << " ";
             output.pop();
         }*/
@@ -191,11 +209,14 @@ int main() {
                         nums.push(a);
                     } else if (temp == "^") {
                         nums.push(to_string(pow(stod(a), stod(b))));
+                    } else if (temp == "~"){
+                        nums.push(to_string(pow(stod(a), -stod(b))));
                     }
                 }
             }
 
         }
+        //if (nums.size() > 0)
         cout << "= " << nums.top() << endl;
     }
     return 0;
