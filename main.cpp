@@ -6,9 +6,7 @@
 #include <string>
 #include <sstream>
 #include <cmath>
-
 #include <cassert>
-
 
 #define NUM_CONSTANTS 6
 #define debug 0
@@ -55,7 +53,7 @@ bool isOperator(const char c) {
     return (c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == 'u' || c == '~' || c == 's' || c == 'c' || c == 't' || c == 'l');
 }
 
-bool isBinaryOperator(const string s){
+bool isBinaryOperator(const string s) {
     return (s == "+" || s == "-" || s == "*" || s == "/" || s == "^" || s == "~");
 }
 
@@ -72,14 +70,26 @@ int getPrecedence(const string s) {
     case '^': //unary (negative num)
     case '~': //to the negative power
         return 4;
-    case 's': case 'c': case 't': case 'l': //trig functions, log
+    case 's':
+    case 'c':
+    case 't':
+    case 'l': //trig functions, log
         return 5;
     default:
         return 0;
     }
 }
 
+#include "functions.h"
+
 int main() {
+    Number a = Number("-50.99");
+    Number b = Number("-40.99");
+
+    cout << "compare: " << a.compare(b) << endl;
+}
+
+int main2() {
     while (true) {
         ///get inputs
         char c;
@@ -109,7 +119,7 @@ int main() {
         }
         //cout << "unary accounted input: " << raw_input << endl;
         ///process natural constants
-        for (int k = 0; k < NUM_CONSTANTS; k++){
+        for (int k = 0; k < NUM_CONSTANTS; k++) {
             ReplaceStringInPlace(raw_input, constants[k][0], constants[k][1]);
         }
         //cout << raw_input << endl;
@@ -144,7 +154,7 @@ int main() {
             temp = tokens.front();
             tokens.pop();
             if (isOperator(temp)) {
-                    //todo: fix -1^2, 1^-2
+                //todo: fix -1^2, 1^-2
                 while(!ops.empty() && getPrecedence(ops.top()) >= getPrecedence(temp)) {
                     output.push(ops.top());
                     ops.pop();
@@ -180,10 +190,10 @@ int main() {
         }
 
         if (debug)
-        for (int k = output.size(); k > 0; k--) {
-            cout << output.front() << " ";
-            output.pop();
-        }
+            for (int k = output.size(); k > 0; k--) {
+                cout << output.front() << " ";
+                output.pop();
+            }
 
         ///evaluate postfix notation
         stack<string> nums;
@@ -199,19 +209,19 @@ int main() {
                 if (!isBinaryOperator(temp)) { //unary operator
                     a = nums.top();
                     nums.pop();
-                    if (temp == "u"){
+                    if (temp == "u") {
                         a = "-"+a;
                         nums.push(a);
-                    } else if (temp == "s"){
+                    } else if (temp == "s") {
                         a = to_string(sin(stod(a)));
                         nums.push(a);
-                    } else if (temp == "c"){
+                    } else if (temp == "c") {
                         a = to_string(cos(stod(a)));
                         nums.push(a);
-                    } else if (temp == "t"){
+                    } else if (temp == "t") {
                         a = to_string(tan(stod(a)));
                         nums.push(a);
-                    } else if (temp == "l"){
+                    } else if (temp == "l") {
                         a = to_string(log(stod(a)));
                         nums.push(a);
                     }
@@ -235,7 +245,7 @@ int main() {
                         nums.push(a);
                     } else if (temp == "^") {
                         nums.push(to_string(pow(stod(a), stod(b))));
-                    } else if (temp == "~"){
+                    } else if (temp == "~") {
                         nums.push(to_string(pow(stod(a), -stod(b))));
                     }
                 }
@@ -243,7 +253,7 @@ int main() {
 
         }
         if (nums.size() > 0)
-        cout << "= " << nums.top() << endl;
+            cout << "= " << nums.top() << endl;
     }
     return 0;
 }

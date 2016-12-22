@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -22,6 +23,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -32,7 +34,12 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/Number.h" />
+		<Unit filename="include/Rational.h" />
+		<Unit filename="include/functions.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Number.cpp" />
+		<Unit filename="src/functions.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
