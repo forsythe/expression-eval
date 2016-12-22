@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1482210493 source:c:\users\forsythe\dropbox\other\coding\cpp\math\main.cpp
+1482413636 source:c:\users\forsythe\dropbox\other\coding\cpp\math\main.cpp
 	<iostream>
 	<vector>
 	<stack>
@@ -10,11 +10,11 @@
 	<cassert>
 	"functions.h"
 
-1482408864 source:c:\users\forsythe\dropbox\other\coding\cpp\math\src\functions.cpp
+1482413530 source:c:\users\forsythe\dropbox\other\coding\cpp\math\src\functions.cpp
 	"functions.h"
 	<sstream>
 
-1482210294 c:\users\forsythe\dropbox\other\coding\cpp\math\include\functions.h
+1482410271 c:\users\forsythe\dropbox\other\coding\cpp\math\include\functions.h
 	"Number.h"
 
 1482409884 c:\users\forsythe\dropbox\other\coding\cpp\math\include\number.h
@@ -22,6 +22,6 @@
 	<iostream>
 	<algorithm>
 
-1482410030 source:c:\users\forsythe\dropbox\other\coding\cpp\math\src\number.cpp
+1482413561 source:c:\users\forsythe\dropbox\other\coding\cpp\math\src\number.cpp
 	"Number.h"
 

@@ -14,6 +14,15 @@ string to_string(int d) {
     return os.str();
 }
 
+void printArr(string s, int arr[], int n){
+    cout << endl;
+    cout << "array: " << s << endl;
+    for (int k = 0; k < n; k++){
+        cout << arr[k] << ",";
+    }
+    cout << endl;
+}
+
 void makeSameLength(Number &a, Number &b) {
     int d_int = a.getIntegerLength() - b.getIntegerLength();
     int d_frac = a.getFractionLength() - b.getFractionLength();
@@ -30,7 +39,8 @@ void makeSameLength(Number &a, Number &b) {
     }
 }
 
-Number add(Number a, Number b) {
+Number add(const Number aa, const Number bb) {
+    Number a = aa, b = bb;
     cout << "adding ";
     a.print();
     cout << " and ";
@@ -76,7 +86,8 @@ Number add(Number a, Number b) {
     return ans;
 }
 
-Number subtract(Number a, Number b) {
+Number subtract(const Number aa, const Number bb) {
+    Number a = aa, b = bb;
     cout << "subtracting ";
     a.print();
     cout << " and ";
@@ -95,38 +106,80 @@ Number subtract(Number a, Number b) {
         b.positive = true;
         return add(a, b);
     }
-
-    makeSameLength(a, b);
-    int x, y, sum, carry = 0;
-    Number ans;
-
-    for (int k = a.value.length()-1; k >= 0; k--){
-        if (a.value[k] == '.'){
-            ans.value = "."+ans.value;
-            continue;
+    //both positive
+    int diff = a.compare(b);
+    if (diff == 1){ //a is bigger than  b
+        makeSameLength(a, b);
+        //cout << endl;
+        //a.print();
+        //cout << endl;
+        //b.print();
+        int* arr = new int[a.value.length()-1];
+        int* brr = new int[a.value.length()-1];
+        int offset = 0;
+        int pos = 0;
+        for (int k = 0; k < a.value.length(); k++){
+            if (a.value[k] == '.'){
+                offset = 1;
+                pos = k;
+                continue;
+            }
+            arr[k-offset] = a.value[k] - '0';
+            brr[k-offset] = b.value[k] - '0';
         }
-        x = a.value[k]-'0';
-        y = b.value[k]-'0';
-        sum = x+y+carry;
-        if (sum >= 10){
-            carry = 1;
-            sum %= 10;
-        } else{
-            carry = 0;
-        }
-        ans.value = to_string(sum)+ans.value;
-    }
-    if (carry)
-        ans.value = "1"+ans.value;
+        //printArr("larger", arr, a.value.length()-1);
+        //printArr("smaller", brr, a.value.length()-1);
+        cout << endl;
 
-    if (!a.positive && !b.positive){
-        ans.positive = false;
+        int* ans = new int[a.value.length()-1];
+
+        for (int k = a.value.length()-2; k >= 0; k--){
+        //printArr("larger", arr, a.value.length()-1);
+            if (arr[k] >= brr[k]){
+                ans[k] = arr[k] - brr[k]; //char on char math is fine
+                //cout << "on digit " << k << endl;
+                //cout << "subtracted " << arr[k] << " - " << brr[k] << endl;
+                //cout << "stored ans[" << k << "] with " <<ans[k] << endl;
+            } else {
+                //cout << "on digit k = " << k << ",  had to borrow" << endl;
+                int borrow = k-1;
+                while (arr[borrow] == 0){
+                    borrow--;
+                }
+                arr[borrow]--;
+                borrow++;
+                while (borrow <= k-1){
+                    arr[borrow] += 9;
+                    borrow++;
+                }
+                arr[borrow] += 10;
+                ans[k] = arr[k] - brr[k]; //char on char math is fine
+            }
+        }
+        //cout << "pos: " << pos << endl;
+        string ansVal = "";
+        for (int k = 0; k < a.value.length(); k++){
+            if (k != pos)
+                ansVal += to_string(ans[k + (k> pos?-1:0)]);
+            else
+                ansVal += '.';
+        }
+        //printArr("ans", ans, a.value.length()-1);
+        delete[] arr;
+        Number n = Number(ansVal);
+        n.trim();
+        return n;
+    } else if (diff == -1){ //b is bigger than a
+        Number ans = subtract(b, a);
+        ans.positive = !ans.positive;
+        return ans;
+    } else {
+        return Number("0.0");
     }
-    ans.trim();
-    return ans;
+
 
 }
-Number multiply(Number a, Number b) {
+Number multiply(const Number aa, const Number bb) {
     return Number();
 
 }
