@@ -83,7 +83,7 @@ int getPrecedence(const string s) {
 #include "functions.h"
 
 int main() {
-    Number a = Number("123.473");
+    Number a = Number("-123.473");
     Number b = Number("9923.1");
 
     Number ans = multiply(a, b);

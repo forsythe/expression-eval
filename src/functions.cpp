@@ -219,8 +219,6 @@ Number multiply(const Number aa, const Number bb) {
         ans.value.erase(ans.value.begin()+ans.getIntegerLength());
         ans.value.insert(ans.value.length()-1-numBehindDecimal, ".");
         ans.trim();
-        return ans;
-
     } else{
         return multiply(b, a);
     }
