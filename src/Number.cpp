@@ -44,7 +44,7 @@ void Number::trim(){
     while(value[0] == '0' && value[1] != '.')
         value = value.substr(1);
     reverse(value.begin(), value.end());
-    while(value.substr(0, 2) == "00")
+    while(value.at(0) == '0' && value.at(1) != '.')
         value = value.substr(1);
     reverse(value.begin(), value.end());
 }

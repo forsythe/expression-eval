@@ -83,10 +83,11 @@ int getPrecedence(const string s) {
 #include "functions.h"
 
 int main() {
-    Number a = Number("100.0");
-    Number b = Number("-999.9");
+    Number a = Number("123.473");
+    Number b = Number("9923.1");
 
-    Number ans = subtract(a, b);
+    Number ans = multiply(a, b);
+    cout << endl;
     cout << "ans: " << endl;
     ans.print();
     cout << endl;

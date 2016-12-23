@@ -41,6 +41,7 @@ void makeSameLength(Number &a, Number &b) {
 
 Number add(const Number aa, const Number bb) {
     Number a = aa, b = bb;
+    cout << endl;
     cout << "adding ";
     a.print();
     cout << " and ";
@@ -88,6 +89,7 @@ Number add(const Number aa, const Number bb) {
 
 Number subtract(const Number aa, const Number bb) {
     Number a = aa, b = bb;
+    cout << endl;
     cout << "subtracting ";
     a.print();
     cout << " and ";
@@ -129,8 +131,6 @@ Number subtract(const Number aa, const Number bb) {
         }
         //printArr("larger", arr, a.value.length()-1);
         //printArr("smaller", brr, a.value.length()-1);
-        cout << endl;
-
         int* ans = new int[a.value.length()-1];
 
         for (int k = a.value.length()-2; k >= 0; k--){
@@ -176,12 +176,58 @@ Number subtract(const Number aa, const Number bb) {
     } else {
         return Number("0.0");
     }
-
-
 }
-Number multiply(const Number aa, const Number bb) {
-    return Number();
 
+Number multiply(const Number aa, const Number bb) {
+    Number a = aa, b = bb;
+    cout << "multiplying ";
+    a.print();
+    cout << " and ";
+    b.print();
+    cout << endl;
+    Number ans = Number("0.0");
+
+    if (a.value.length() >= b.value.length()){
+        int numBehindDecimal = a.getFractionLength() + b.getFractionLength();
+        a.value.erase(a.value.begin()+a.getIntegerLength());
+        b.value.erase(b.value.begin()+b.getIntegerLength());
+        a.value = "0" + a.value;
+        string tempVal = "";
+        for (int l = b.value.length()-1; l >= 0; l--){ //lower number
+            int curDigit = b.value[l] - '0';
+            int prodDigit = 0;
+            int carry = 0;
+            if (curDigit == 0){
+                cout << endl <<  "skipping mult by 0..." << endl;
+                continue;
+            }
+            for (int u = a.value.length()-1; u >= 0; u--){ //upper number
+                prodDigit = (a.value[u]-'0')*curDigit;
+                prodDigit += carry;
+
+                carry = prodDigit/10;
+                prodDigit %= 10;
+                tempVal = to_string(prodDigit) + tempVal;
+            }
+            //add extra 0s
+            for (int k = 0; k < (b.value.length()-1)-l; k++){
+                tempVal += "0";
+            }
+            ans = add(ans, Number(tempVal+".0"));
+            tempVal = "";
+        }
+        ans.value.erase(ans.value.begin()+ans.getIntegerLength());
+        ans.value.insert(ans.value.length()-1-numBehindDecimal, ".");
+        ans.trim();
+        return ans;
+
+    } else{
+        return multiply(b, a);
+    }
+    if (a.positive != b.positive){
+        ans.positive = false;
+    }
+    return ans;
 }
 Number divide(Number a, Number b) {
     return Number();
